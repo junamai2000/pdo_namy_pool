@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("pdo_namy_pool", "for pdo_namy_pool support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("pdo_namy_pool", "enable pdo_namy_pool support", "no");
+
+if (PHP_PDO_NAMY_POOL != "no") {
+	EXTENSION("pdo_namy_pool", "pdo_namy_pool.c");
+}
+

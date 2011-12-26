@@ -1,0 +1,12 @@
+pdo_namy_pool.lo: /home/namai/work/php/php-5.3.8/ext/pdo_namy_pool/pdo_namy_pool.c
+	$(LIBTOOL) --mode=compile $(CC) -I -I -I. -I/home/namai/work/php/php-5.3.8/ext/pdo_namy_pool $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /home/namai/work/php/php-5.3.8/ext/pdo_namy_pool/pdo_namy_pool.c -o pdo_namy_pool.lo 
+namy_pool_driver.lo: /home/namai/work/php/php-5.3.8/ext/pdo_namy_pool/namy_pool_driver.c
+	$(LIBTOOL) --mode=compile $(CC) -I -I -I. -I/home/namai/work/php/php-5.3.8/ext/pdo_namy_pool $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /home/namai/work/php/php-5.3.8/ext/pdo_namy_pool/namy_pool_driver.c -o namy_pool_driver.lo 
+namy_pool_statement.lo: /home/namai/work/php/php-5.3.8/ext/pdo_namy_pool/namy_pool_statement.c
+	$(LIBTOOL) --mode=compile $(CC) -I -I -I. -I/home/namai/work/php/php-5.3.8/ext/pdo_namy_pool $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /home/namai/work/php/php-5.3.8/ext/pdo_namy_pool/namy_pool_statement.c -o namy_pool_statement.lo 
+$(phplibdir)/pdo_namy_pool.la: ./pdo_namy_pool.la
+	$(LIBTOOL) --mode=install cp ./pdo_namy_pool.la $(phplibdir)
+
+./pdo_namy_pool.la: $(shared_objects_pdo_namy_pool) $(PDO_NAMY_POOL_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_pdo_namy_pool) $(PDO_NAMY_POOL_SHARED_LIBADD)
+
