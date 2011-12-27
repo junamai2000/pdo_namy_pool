@@ -1,0 +1,8 @@
+# how to compile
+phpize
+./configure
+make
+
+# then copy pdo_namy_pool to lib/ for php
+# you may need sapi/apache2handler/php_apache.h from php src 
+# and you also mod_namy_pool.so to link 

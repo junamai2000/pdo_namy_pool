@@ -20,32 +20,99 @@ Make sure that the comment is aligned:
 if test "$PHP_PDO_NAMY_POOL" != "no"; then
   dnl Write more examples of tests here...
 
-  dnl # --with-pdo_namy_pool -> check with-path
-  dnl SEARCH_PATH="/usr/local /usr"     # you might want to change this
-  dnl SEARCH_FOR="/include/pdo_namy_pool.h"  # you most likely want to change this
-  dnl if test -r $PHP_PDO_NAMY_POOL/$SEARCH_FOR; then # path given as parameter
-  dnl   PDO_NAMY_POOL_DIR=$PHP_PDO_NAMY_POOL
-  dnl else # search default path list
-  dnl   AC_MSG_CHECKING([for pdo_namy_pool files in default path])
-  dnl   for i in $SEARCH_PATH ; do
-  dnl     if test -r $i/$SEARCH_FOR; then
-  dnl       PDO_NAMY_POOL_DIR=$i
-  dnl       AC_MSG_RESULT(found in $i)
-  dnl     fi
-  dnl   done
-  dnl fi
-  dnl
-  dnl if test -z "$PDO_NAMY_POOL_DIR"; then
-  dnl   AC_MSG_RESULT([not found])
-  dnl   AC_MSG_ERROR([Please reinstall the pdo_namy_pool distribution])
-  dnl fi
+  # --with-pdo_namy_pool -> check with-path
+  # mysql
+  SEARCH_PATH="/usr/local /usr"
+  SEARCH_FOR="/include/mysql/mysql.h"
+  AC_MSG_CHECKING([for mysql files in default path])
+   for i in $SEARCH_PATH ; do
+     if test -r $i/$SEARCH_FOR; then
+       MYSQL_DIR=$i
+       AC_MSG_RESULT(found in $i)
+       PHP_ADD_INCLUDE($MYSQL_DIR/include/mysql)
+       PHP_ADD_LIBRARY_WITH_PATH(mysqlclient, $MYSQL_DIR/lib/mysql, PDO_NAMY_POOL_SHARED_LIBADD)
+     fi
+   done
+  
+  if test -z "$MYSQL_DIR"; then
+    AC_MSG_RESULT([not found])
+    AC_MSG_ERROR([Please reinstall the mysql distribution])
+  fi
+
+ 
+  # httpd 
+  SEARCH_PATH="/usr/local /usr"
+  SEARCH_FOR="/include/httpd/httpd.h"
+  AC_MSG_CHECKING([for httpd files in default path])
+   for i in $SEARCH_PATH ; do
+     if test -r $i/$SEARCH_FOR; then
+       HTTPD_DIR=$i
+       AC_MSG_RESULT(found in $i)
+       PHP_ADD_INCLUDE($HTTPD_DIR/include/httpd)
+     fi
+   done
+  
+  if test -z "$HTTPD_DIR"; then
+    AC_MSG_RESULT([not found])
+    AC_MSG_ERROR([Please reinstall the mysql distribution])
+  fi
+  
+  # apr
+  SEARCH_PATH="/usr/local /usr"
+  SEARCH_FOR="/include/apr-1/apr.h"
+  AC_MSG_CHECKING([for apr files in default path])
+   for i in $SEARCH_PATH ; do
+     if test -r $i/$SEARCH_FOR; then
+       APR_DIR=$i
+       AC_MSG_RESULT(found in $i)
+       PHP_ADD_INCLUDE($APR_DIR/include/apr-1)
+       PHP_ADD_LIBRARY_WITH_PATH(apr-1, $APR_DIR/lib, PDO_NAMY_POOL_SHARED_LIBADD)
+     fi
+   done
+  
+  if test -z "$APR_DIR"; then
+    AC_MSG_RESULT([not found])
+    AC_MSG_ERROR([Please reinstall the apr distribution])
+  fi
+
+  # このファイルってインストールされないよね？？？
+  # sapi/apache2handler/php_apache.h
+  SEARCH_PATH="/usr/local /usr /usr/src/php-5.3.8"
+  SEARCH_FOR="/sapi/apache2handler/php_apache.h"
+  AC_MSG_CHECKING([for sapi/apache2handler/php_apache.h files in default path])
+   for i in $SEARCH_PATH ; do
+     if test -r $i/$SEARCH_FOR; then
+       APR_DIR=$i
+       AC_MSG_RESULT(found in $i)
+       PHP_ADD_INCLUDE($APR_DIR/)
+     fi
+   done
+  
+  if test -z "$APR_DIR"; then
+    AC_MSG_RESULT([not found])
+    AC_MSG_ERROR([Please reinstall the apr distribution])
+  fi
+  
+  # mod_namy_pool.h
+  SEARCH_PATH="/usr/local /usr"
+  SEARCH_FOR="include/httpd/mod_namy_pool.h"
+  AC_MSG_CHECKING([for mod_namy_pool.h files in default path])
+   for i in $SEARCH_PATH ; do
+     if test -r $i/$SEARCH_FOR; then
+       MOD_DIR=$i
+       AC_MSG_RESULT(found in $i)
+       PHP_ADD_INCLUDE($MOD_DIR/include/httpd)
+       PHP_ADD_LIBRARY_WITH_PATH(namy_pool, $MOD_DIR/lib/httpd, PDO_NAMY_POOL_SHARED_LIBADD)
+     fi
+   done
+  
+  if test -z "$APR_DIR"; then
+    AC_MSG_RESULT([not found])
+    AC_MSG_ERROR([Please reinstall the mod_namy_pool distribution])
+  fi
 
   # --with-pdo_namy_pool -> add include path
   PHP_ADD_INCLUDE($PDO_NAMY_POOL_DIR/include)
-  dnl PHP_ADD_INCLUDE($PDO_NAMY_POOL_DIR/../../include)
-  dnl PHP_ADD_INCLUDE($PDO_NAMY_POOL_DIR/../../main)
-  dnl PHP_ADD_INCLUDE($PDO_NAMY_POOL_DIR/../../ext)
-  dnl PHP_ADD_INCLUDE(/usr/local/include/mysql)
 
   dnl # --with-pdo_namy_pool -> check for lib and symbol presence
   dnl LIBNAME=pdo_namy_pool # you may want to change this
@@ -62,11 +129,6 @@ if test "$PHP_PDO_NAMY_POOL" != "no"; then
   dnl ])
   dnl
   dnl PHP_SUBST(PDO_NAMY_POOL_SHARED_LIBADD)
-
-  PHP_ADD_LIBRARY_WITH_PATH(namy_pool, /usr/local/lib, PDO_NAMY_POOL_SHARED_LIBADD)
-  PHP_ADD_LIBRARY_WITH_PATH(mysqlclient, /usr/local/lib/mysql, PDO_NAMY_POOL_SHARED_LIBADD)
-  PHP_ADD_LIBRARY_WITH_PATH(apr-1, /usr/lib, PDO_NAMY_POOL_SHARED_LIBADD)
-  PHP_ADD_LIBRARY_WITH_PATH(aprutil-1, /usr/lib, PDO_NAMY_POOL_SHARED_LIBADD)
   PHP_SUBST(PDO_NAMY_POOL_SHARED_LIBADD)
   PHP_NEW_EXTENSION(pdo_namy_pool, pdo_namy_pool.c namy_pool_driver.c namy_pool_statement.c, $ext_shared,,-I$pdo_inc_path -I)
 fi

@@ -36,7 +36,7 @@
 
 
 
-#include "/home/namai/work/github/mod_namy_pool/mod_namy_pool.h"
+#include "mod_namy_pool.h"
 #ifndef PDO_USE_MYSQLND
 #include <mysqld_error.h>
 #endif
