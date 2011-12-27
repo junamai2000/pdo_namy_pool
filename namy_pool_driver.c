@@ -35,12 +35,19 @@
 #include "ext/standard/info.h"
 
 
-
-#include "mod_namy_pool.h"
 #ifndef PDO_USE_MYSQLND
 #include <mysqld_error.h>
 #endif
 #include "zend_exceptions.h"
+
+/*----- imported from mod_namy_pool.h -----*/
+#define NAMY_UNKNOWN_CONNECTION 0
+#define NAMY_OK 1
+MYSQL* namy_attach_pool_connection(request_rec *r, const char* connection_pool_name);
+int    namy_detach_pool_connection(request_rec *r, MYSQL *mysql);
+void   namy_close_pool_connection(server_rec *s);
+int    Namy_is_pooled_connection(request_rec *r, MYSQL *mysql);
+/*----- imported from mod_namy_pool.h -----*/
 
 
 #if PDO_USE_MYSQLND

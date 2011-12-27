@@ -23,6 +23,8 @@
 
 #include "php.h"
 #include "php_ini.h"
+#include "SAPI.h"
+#include "sapi/apache2handler/php_apache.h"
 #include "ext/standard/info.h"
 #include "pdo/php_pdo.h"
 #include "pdo/php_pdo_driver.h"
@@ -45,6 +47,8 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_namy_pool);
 # endif
 #endif
 
+#define NAMY_POOL_SO_PATH "pdo_namy_pool.module_path"
+
 /* {{{ PHP_INI_BEGIN
 */
 PHP_INI_BEGIN()
@@ -54,6 +58,7 @@ PHP_INI_BEGIN()
 #if PDO_DBG_ENABLED
 	STD_PHP_INI_ENTRY("pdo_namy_pool.debug",	NULL, PHP_INI_SYSTEM, OnUpdateString, debug, zend_pdo_namy_pool_globals, pdo_namy_pool_globals)
 #endif
+	PHP_INI_ENTRY(NAMY_POOL_SO_PATH, NULL, PHP_INI_ALL, NULL)
 PHP_INI_END()
 /* }}} */
 
@@ -64,6 +69,12 @@ PHP_INI_END()
 static PHP_MINIT_FUNCTION(pdo_namy_pool)
 {
 	REGISTER_INI_ENTRIES();
+
+	// if php command line & module is set
+	if (!SG(server_context) && INI_STR(NAMY_POOL_SO_PATH) != NULL)
+	{
+		PDO_NAMY_POOL_G(so_handle) = DL_LOAD(INI_STR(NAMY_POOL_SO_PATH));
+	}
 
 	REGISTER_PDO_CLASS_CONST_LONG("NAMY_POOL_ATTR_USE_BUFFERED_QUERY", (long)PDO_NAMY_POOL_ATTR_USE_BUFFERED_QUERY);
 	REGISTER_PDO_CLASS_CONST_LONG("NAMY_POOL_ATTR_LOCAL_INFILE", (long)PDO_NAMY_POOL_ATTR_LOCAL_INFILE);	
@@ -94,6 +105,8 @@ static PHP_MSHUTDOWN_FUNCTION(pdo_namy_pool)
 #if PDO_USE_MYSQLND
 	UNREGISTER_INI_ENTRIES();
 #endif
+	if (PDO_NAMY_POOL_G(so_handle) != NULL)
+		DL_UNLOAD(PDO_NAMY_POOL_G(so_handle));
 
 	return SUCCESS;
 }
@@ -130,6 +143,7 @@ static PHP_RINIT_FUNCTION(pdo_namy_pool)
 		dbg->m->set_mode(dbg, PDO_NAMY_POOL_G(debug));
 		PDO_NAMY_POOL_G(dbg) = dbg;
 	}
+	PDO_NAMY_POOL_G(so_handle) = NULL;
 	
 	return SUCCESS;
 }

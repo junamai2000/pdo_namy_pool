@@ -1,8 +1,26 @@
-# how to compile
-phpize
-./configure
-make
+how to compile
+ phpize
+ ./configure
+ make
 
-# then copy pdo_namy_pool to lib/ for php
-# you may need sapi/apache2handler/php_apache.h from php src 
-# and you also mod_namy_pool.so to link 
+you may need sapi/apache2handler/php_apache.h from php src 
+
+in php.ini
+ extension=pdo_namy_pool.so
+ pdo_namy_pool.module_path="/usr/lib/mod_namy_pool.so"
+
+sample
+<?php
+// namy_pool does not care what host adress is, just put user name as a connection pool name(you should set the name in httpd.conf)
+$pdo = new PDO("namy_pool:host=localhost; unix_socket=/var/lib/mysql/mysql.sock; dbname=test","test");
+$stmt = $pdo->query("SELECT * FROM test order by name $sort limit 1000");
+{
+    print $pdo->errorCode();
+    print_r($pdo->errorInfo());
+    exit;
+}
+
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+    echo implode(", ", $row) . PHP_EOL;
+}
+

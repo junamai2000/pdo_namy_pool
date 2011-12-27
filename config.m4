@@ -93,24 +93,6 @@ if test "$PHP_PDO_NAMY_POOL" != "no"; then
     AC_MSG_ERROR([Please reinstall the apr distribution])
   fi
   
-  # mod_namy_pool.h
-  SEARCH_PATH="/usr/local /usr"
-  SEARCH_FOR="include/httpd/mod_namy_pool.h"
-  AC_MSG_CHECKING([for mod_namy_pool.h files in default path])
-   for i in $SEARCH_PATH ; do
-     if test -r $i/$SEARCH_FOR; then
-       MOD_DIR=$i
-       AC_MSG_RESULT(found in $i)
-       PHP_ADD_INCLUDE($MOD_DIR/include/httpd)
-       PHP_ADD_LIBRARY_WITH_PATH(namy_pool, $MOD_DIR/lib/httpd, PDO_NAMY_POOL_SHARED_LIBADD)
-     fi
-   done
-  
-  if test -z "$APR_DIR"; then
-    AC_MSG_RESULT([not found])
-    AC_MSG_ERROR([Please reinstall the mod_namy_pool distribution])
-  fi
-
   # --with-pdo_namy_pool -> add include path
   PHP_ADD_INCLUDE($PDO_NAMY_POOL_DIR/include)
 

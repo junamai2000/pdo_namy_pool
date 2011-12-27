@@ -66,6 +66,7 @@ static inline void PDO_DBG_ENTER(char *func_name) {}
 #endif
 
 ZEND_BEGIN_MODULE_GLOBALS(pdo_mysql)
+	DL_HANDLE so_handle; // The path of mod_namy_pool.so, so that we can resolve symbols
 #ifndef PHP_WIN32
 	char          *default_socket;
 #endif
