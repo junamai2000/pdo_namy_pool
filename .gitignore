@@ -1,0 +1,12 @@
+autom4te.cache/*
+.deps
+.libs/*
+Makefile
+config.log
+configure
+modules/*
+namy_pool_driver.lo
+namy_pool_statement.lo
+pdo_namy_pool.la
+pdo_namy_pool.lo
+
